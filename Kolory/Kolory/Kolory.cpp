@@ -20,8 +20,31 @@ public:
     string imie;
     int kasa = 0;
     int portfel = 0; //kasa z wygranych rund
-};
 
+    Gracz operator+(const Gracz& pieniadze) const {
+        Gracz gracz = *this;
+        gracz.kasa += pieniadze.kasa;
+        gracz.portfel += pieniadze.portfel;
+        return gracz;
+
+    }
+
+    Gracz operator-(const Gracz& pieniadze) const {
+        Gracz gracz = *this;
+        gracz.kasa -= pieniadze.kasa;
+        gracz.portfel -= pieniadze.portfel;
+        return gracz;
+    }
+
+    Gracz operator>(const Gracz& gracz1, const Gracz& gracz2) {
+        return gracz1.portfel > gracz2.portfel;
+    }
+
+    Gracz operator==(const Gracz& gracz1, const Gracz& gracz2) {           //porównanie pól wartości obu graczy
+        return (gracz1.imie == gracz2.imie && gracz1.kasa == gracz2.kasa && gracz1.portfel == gracz2.portfel);
+    }
+
+};
 
 class Gra {
 private:
@@ -32,6 +55,11 @@ private:
     char wybor;
     int kolejka = 0;
     int Kolo[16] = { -1, 0, 100, 200, 100, 200, 100, 200, 500, 500, 1000, 1000, 1500, 2000, 3000, 5000 };
+
+    char operator[](int indeksHasla) {
+        return haslo[indeksHasla];
+    }
+
 
 public:
     Gra() {
@@ -120,48 +148,46 @@ public:
     }
 }
 
-int main()
-{
-    int main() {
-        Gra gra;
+int main() {
+    Gra gra;
 
-        cout << "Gra w 'Kolo Fortuny'\n";
-        gra.textPlayers();
+    cout << "Gra w 'Kolo Fortuny'\n";
+    gra.textPlayers();
 
-        while (gra.zgadl == 0) {
-            if (gra.kolejka == 3)
-                gra.kolejka = 0;
+    while (gra.zgadl == 0) {
+        if (gra.kolejka == 3)
+            gra.kolejka = 0;
 
-            cout << "Gracz: " << gra.gracze[gra.kolejka].imie << "\n";
-            cout << "Kasa: " << gra.gracze[gra.kolejka].kasa << "\n";
-            cout << "Portfel: " << gra.gracze[gra.kolejka].portfel << "\n";
+        cout << "Gracz: " << gra.gracze[gra.kolejka].imie << "\n";
+        cout << "Kasa: " << gra.gracze[gra.kolejka].kasa << "\n";
+        cout << "Portfel: " << gra.gracze[gra.kolejka].portfel << "\n";
 
-            cout << "1. Obroc kolkiem\n";
-            cout << "2. Zgadnij haslo\n";
+        cout << "1. Obroc kolkiem\n";
+        cout << "2. Zgadnij haslo\n";
 
-            gra.wybor = gra.WczytajWybor();
-            switch (gra.wybor) {
-            case '2':
-                cout << "Podaj haslo" << endl;
-                getline(cin >> ws, proba);  // wczytanie z klawiatury string z uwzgl. whitespa
-                for (auto& c : proba)  // & zapamietuje modyfikacje w petli & - referencja
-                    c = toupper(c);
-                if (haslo == proba) {
-                    cout << endl << " !!!!!!!!!! =======   WYGRANA ========== !!!!!!!!!!!!!" << endl;
-                    gracze[kolejka].portfel += gracze[kolejka].kasa;
-                    break;
-                }
-                else
-                {
-                    kolejka = (kolejka + 1) % 3;
-                    suma = 1;
-                    cout << endl << " !!!!!!!!!! =======   ZLE ========== !!!!!!!!!!!!!" << endl;
-                    cout << endl << "=================================================" << endl;
-                    continue;
-                    break;
-            case '1':
-                gra.zgadnijHaslo();
+        gra.wybor = gra.WczytajWybor();
+        switch (gra.wybor) {
+        case '2':
+            cout << "Podaj haslo" << endl;
+            getline(cin >> ws, proba);  // wczytanie z klawiatury string z uwzgl. whitespa
+            for (auto& c : proba)  // & zapamietuje modyfikacje w petli & - referencja
+                c = toupper(c);
+            if (haslo == proba) {
+                cout << endl << " !!!!!!!!!! =======   WYGRANA ========== !!!!!!!!!!!!!" << endl;
+                gracze[kolejka].portfel += gracze[kolejka].kasa;
                 break;
+            }
+            else
+            {
+                kolejka = (kolejka + 1) % 3;
+                suma = 1;
+                cout << endl << " !!!!!!!!!! =======   ZLE ========== !!!!!!!!!!!!!" << endl;
+                cout << endl << "=================================================" << endl;
+                continue;
+                break;
+        case '1':
+            gra.zgadnijHaslo();
+            break;
             }
 
             if (gra.sa_spolgloski == 0)
@@ -179,4 +205,5 @@ int main()
 
         return 0;
     }
+}
 
